@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>QR Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- QR Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background: #111;
+      padding: 25px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #00c6ff;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #qrcode {
+      margin: 20px auto;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="card" id="loginBox">
+  <h2>🔐 Login with Google</h2>
+  <button onclick="login()">Continue with Google</button>
+</div>
+
+<div class="card hidden" id="appBox">
+  <h2>📷 QR Code Generator</h2>
+  <input type="text" id="url" placeholder="دخل الرابط" />
+  <button onclick="generateQR()">Generate QR</button>
+  <div id="qrcode"></div>
+  <p>🔢 Scans: <span id="count">0</span></p>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+  // 🔥 Firebase config (بدلها بالديالَك)
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT",
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      loginBox.classList.add('hidden');
+      appBox.classList.remove('hidden');
+    }
+  });
+
+  function login() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider);
+  }
+
+  function logout() {
+    auth.signOut();
+    location.reload();
+  }
+
+  async function generateQR() {
+    const url = document.getElementById('url').value;
+    if (!url) return alert('دخل رابط');
+
+    const id = btoa(url).replace(/=/g, '');
+
+    await db.collection('qr').doc(id).set({
+      url: url,
+      scans: 0
+    });
+
+    document.getElementById('qrcode').innerHTML = "";
+
+    new QRCode(document.getElementById('qrcode'), {
+      text: location.origin + '/scan.html?id=' + id,
+      width: 200,
+      height: 200
+    });
+
+    document.getElementById('count').innerText = 0;
+  }
+</script>
+
+</body>
+</html>
+ 
