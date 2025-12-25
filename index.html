@@ -1,139 +1,84 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <title>QR Generator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <!-- QR Library -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .card {
-      background: #111;
-      padding: 25px;
-      border-radius: 15px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      text-align: center;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      margin-bottom: 10px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background: #00c6ff;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    #qrcode {
-      margin: 20px auto;
-    }
-
-    .hidden { display: none; }
-  </style>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="card" id="loginBox">
-  <h2>🔐 Login with Google</h2>
-  <button onclick="login()">Continue with Google</button>
-</div>
+<div class="bg"></div>
 
-<div class="card hidden" id="appBox">
-  <h2>📷 QR Code Generator</h2>
-  <input type="text" id="url" placeholder="دخل الرابط" />
-  <button onclick="generateQR()">Generate QR</button>
-  <div id="qrcode"></div>
-  <p>🔢 Scans: <span id="count">0</span></p>
-  <button onclick="logout()">Logout</button>
-</div>
+<header>
+  <h1>موقع تعلم المعلوميات</h1>
+  <p>أدوات ومفاهيم أساسية بطريقة ثلاثية الأبعاد</p>
+</header>
 
-<script>
-  // 🔥 Firebase config (بدلها بالديالَك)
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT",
-  };
+<section class="cards">
 
-  firebase.initializeApp(firebaseConfig);
+  <a href="computer.html" class="card" data-color="#0a3d62">
+    <img src="https://media.giphy.com/media/QssGEmpkyEOhBCb7e1/giphy.gif">
+    <h3>الحاسوب</h3>
+    <p>معالجة وتخزين المعلومات</p>
+  </a>
 
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+  <a href="keyboard.html" class="card" data-color="#6D214F">
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWFpOGtzeTZlYWRremN3a2swdm9yaWN2bHMydXZmZzd0cnRtcWJqaiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/tOi4zkAikroTOBV9oy/giphy.gif">
+    <h3>clavier</h3>
+    <p>إدخال النصوص</p>
+  </a>
 
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      loginBox.classList.add('hidden');
-      appBox.classList.remove('hidden');
-    }
-  });
+  <a href="mouse.html" class="card" data-color="#1B1464">
+    <img src="https://media.giphy.com/media/26tn33aiTi1jkl6H6/giphy.gif">
+    <h3>الفأرة</h3>
+    <p>التحكم في المؤشر</p>
+  </a>
 
-  function login() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
-  }
+  <a href="screen.html" class="card" data-color="#2C2C54">
+    <img src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif">
+    <h3>الشاشة</h3>
+    <p>عرض المعلومات</p>
+  </a>
 
-  function logout() {
-    auth.signOut();
-    location.reload();
-  }
+  <a href="printer.html" class="card" data-color="#40407a">
+    <img src="https://media.giphy.com/media/3o7TKMt1VVNkHV2PaE/giphy.gif">
+    <h3>الطابعة</h3>
+    <p>طباعة الوثائق</p>
+  </a>
 
-  async function generateQR() {
-    const url = document.getElementById('url').value;
-    if (!url) return alert('دخل رابط');
+  <a href="software.html" class="card" data-color="#218c74">
+    <img src="https://media.giphy.com/media/xUPGcguWZHRC2HyBRS/giphy.gif">
+    <h3>البرمجيات</h3>
+    <p>برامج الحاسوب</p>
+  </a>
 
-    const id = btoa(url).replace(/=/g, '');
+  <a href="hardware.html" class="card" data-color="#cc8e35">
+    <img src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif">
+    <h3>الهاردوير</h3>
+    <p>المكونات المادية</p>
+  </a>
 
-    await db.collection('qr').doc(id).set({
-      url: url,
-      scans: 0
-    });
+  <a href="internet.html" class="card" data-color="#227093">
+    <img src="https://media.giphy.com/media/3o7aD4t2vRX9kF1QBi/giphy.gif">
+    <h3>الإنترنت</h3>
+    <p>شبكة عالمية</p>
+  </a>
 
-    document.getElementById('qrcode').innerHTML = "";
+  <a href="folder.html" class="card" data-color="#b33939">
+    <img src="https://media.giphy.com/media/3o7TKx5wG8G1sGm0DK/giphy.gif">
+    <h3>الملفات</h3>
+    <p>تنظيم المعلومات</p> 
+  </a>
 
-    new QRCode(document.getElementById('qrcode'), {
-      text: location.origin + '/scan.html?id=' + id,
-      width: 200,
-      height: 200
-    });
+  <a href="os.html" class="card" data-color="#596275">
+    <img src="https://media.giphy.com/media/l3q2K5jinAlChoCLS/giphy.gif">
+    <h3>نظام التشغيل</h3>
+    <p>تشغيل الحاسوب</p>
+  </a>
 
-    document.getElementById('count').innerText = 0;
-  }
-</script>
 
+</section>
+
+<script src="script.js"></script>
 </body>
 </html>
- 
