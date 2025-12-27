@@ -1,139 +1,268 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="fr" dir="ltr">
 <head>
-  <meta charset="UTF-8" />
-  <title>QR Generator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informatique – Site éducatif</title>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- QR Library -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#0b1020;
+  --card:#ffffff18;
+  --text:#ffffff;
+  --main:#38bdf8;
+}
+body.light{
+  --bg:#f1f5f9;
+  --card:#ffffff;
+  --text:#0b1020;
+}
+*{box-sizing:border-box;font-family:Segoe UI,Tahoma;}
+body{
+  margin:0;
+  background:radial-gradient(circle at top,var(--bg),#020617);
+  color:var(--text);
+  transition:.4s;
+}
+header{
+  text-align:center;
+  padding:40px 20px;
+}
+.controls{
+  position:fixed;
+  top:15px;
+  right:15px;
+  display:flex;
+  gap:10px;
+}
+.controls button{
+  border:none;
+  padding:10px 14px;
+  border-radius:20px;
+  cursor:pointer;
+}
+.container{
+  padding:30px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+}
+.card{
+  background:var(--card);
+  backdrop-filter:blur(15px);
+  border-radius:25px;
+  overflow:hidden;
+  box-shadow:0 20px 40px #00000080;
+  animation:float 6s ease-in-out infinite;
+}
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+  100%{transform:translateY(0);}
+}
+.card img{
+  width:100%;
+  height:150px;
+  object-fit:cover;
+}
+.card-content{
+  padding:18px;
+  text-align:center;
+}
+.card-content h3{color:var(--main);}
+.card-content p{font-size:14px;}
+.card-content button{
+  margin-top:10px;
+  border:none;
+  padding:8px 16px;
+  border-radius:20px;
+  background:var(--main);
+  cursor:pointer;
+}
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .card {
-      background: #111;
-      padding: 25px;
-      border-radius: 15px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      text-align: center;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      margin-bottom: 10px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background: #00c6ff;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    #qrcode {
-      margin: 20px auto;
-    }
-
-    .hidden { display: none; }
-  </style>
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:#000000c0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+.modal.active{display:flex;}
+.page{
+  background:var(--bg);
+  max-width:900px;
+  width:100%;
+  border-radius:30px;
+  padding:30px;
+  max-height:90vh;
+  overflow:auto;
+}
+.page img{
+  width:100%;
+  border-radius:20px;
+  margin-bottom:15px;
+}
+.close{
+  cursor:pointer;
+  font-size:22px;
+}
+</style>
 </head>
+
 <body>
 
-<div class="card" id="loginBox">
-  <h2>🔐 Login with Google</h2>
-  <button onclick="login()">Continue with Google</button>
+<div class="controls">
+  <button onclick="toggleLang()">AR / FR</button>
+  <button onclick="toggleTheme()">🌙</button>
 </div>
 
-<div class="card hidden" id="appBox">
-  <h2>📷 QR Code Generator</h2>
-  <input type="text" id="url" placeholder="دخل الرابط" />
-  <button onclick="generateQR()">Generate QR</button>
-  <div id="qrcode"></div>
-  <p>🔢 Scans: <span id="count">0</span></p>
-  <button onclick="logout()">Logout</button>
+<header>
+  <h1 data-fr="Informatique" data-ar="المعلوميات">Informatique</h1>
+  <p data-fr="20 notions essentielles en informatique"
+     data-ar="20 مفهوم أساسي في مادة المعلوميات">
+     20 notions essentielles en informatique
+  </p>
+</header>
+
+<div class="container" id="cards"></div>
+
+<div class="modal" id="modal">
+  <div class="page">
+    <span class="close" onclick="closePage()">✖</span>
+    <h2 id="title"></h2>
+    <img id="image">
+    <p id="longText"></p>
+  </div>
 </div>
 
 <script>
-  // 🔥 Firebase config (بدلها بالديالَك)
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT",
-  };
-
-  firebase.initializeApp(firebaseConfig);
-
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      loginBox.classList.add('hidden');
-      appBox.classList.remove('hidden');
-    }
+let ar=false;
+function toggleLang(){
+  ar=!ar;
+  document.documentElement.lang=ar?"ar":"fr";
+  document.documentElement.dir=ar?"rtl":"ltr";
+  document.querySelectorAll("[data-fr]").forEach(e=>{
+    e.textContent=ar?e.dataset.ar:e.dataset.fr;
   });
+  render();
+}
+function toggleTheme(){
+  document.body.classList.toggle("light");
+}
 
-  function login() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
-  }
+const data=[
+["Ordinateur","الحاسوب","Machine électronique","آلة إلكترونية",
+"L’ordinateur est une machine électronique capable de traiter, stocker et afficher des informations. Il est utilisé dans plusieurs domaines comme l’éducation, le travail et la communication.",
+"الحاسوب آلة إلكترونية تقوم بمعالجة وتخزين وعرض المعلومات، ويُستعمل في مجالات متعددة كالتعلم والعمل والتواصل."],
 
-  function logout() {
-    auth.signOut();
-    location.reload();
-  }
+["Clavier","لوحة المفاتيح","Périphérique d’entrée","أداة إدخال",
+"Le clavier permet de saisir des lettres, des chiffres et des symboles pour communiquer avec l’ordinateur.",
+"لوحة المفاتيح تُستعمل لإدخال الحروف والأرقام والرموز للتواصل مع الحاسوب."],
 
-  async function generateQR() {
-    const url = document.getElementById('url').value;
-    if (!url) return alert('دخل رابط');
+["Souris","الفأرة","Cliquer et pointer","النقر والتأشير",
+"La souris permet de déplacer le curseur et sélectionner des éléments à l’écran.",
+"الفأرة تُستعمل لتحريك المؤشر واختيار العناصر."],
 
-    const id = btoa(url).replace(/=/g, '');
+["Écran","الشاشة","Afficher les données","عرض المعطيات",
+"L’écran affiche les informations traitées par l’ordinateur sous forme visuelle.",
+"الشاشة تعرض المعلومات التي يعالجها الحاسوب بشكل مرئي."],
 
-    await db.collection('qr').doc(id).set({
-      url: url,
-      scans: 0
-    });
+["Unité centrale","الوحدة المركزية","Cœur de l’ordinateur","قلب الحاسوب",
+"L’unité centrale contient les composants essentiels comme le processeur.",
+"الوحدة المركزية تحتوي على أهم مكونات الحاسوب."],
 
-    document.getElementById('qrcode').innerHTML = "";
+["Fichier","الملف","Données stockées","معطيات مخزنة",
+"Un fichier est un ensemble de données enregistrées dans l’ordinateur.",
+"الملف هو مجموعة من المعطيات المخزنة في الحاسوب."],
 
-    new QRCode(document.getElementById('qrcode'), {
-      text: location.origin + '/scan.html?id=' + id,
-      width: 200,
-      height: 200
-    });
+["Dossier","المجلد","Organisation","تنظيم",
+"Le dossier sert à organiser et classer les fichiers.",
+"المجلد يُستعمل لتنظيم الملفات."],
 
-    document.getElementById('count').innerText = 0;
-  }
+["Système d’exploitation","نظام التشغيل","Gestion du système","إدارة النظام",
+"Le système d’exploitation gère le fonctionnement de l’ordinateur.",
+"نظام التشغيل يدير عمل الحاسوب."],
+
+["Logiciel","البرنامج","Application","تطبيق",
+"Un logiciel permet d’effectuer une tâche spécifique.",
+"البرنامج يساعد على إنجاز مهمة معينة."],
+
+["Internet","الأنترنت","Réseau mondial","شبكة عالمية",
+"Internet permet l’échange rapide d’informations dans le monde.",
+"الأنترنت يتيح تبادل المعلومات بسرعة على الصعيد العالمي."],
+
+["Navigateur","المتصفح","Accès web","ولوج الأنترنت",
+"Le navigateur permet de consulter les sites web.",
+"المتصفح يُستعمل لتصفح المواقع الإلكترونية."],
+
+["Email","البريد الإلكتروني","Communication","التواصل",
+"L’email permet d’envoyer et recevoir des messages.",
+"البريد الإلكتروني يُستعمل لإرسال واستقبال الرسائل."],
+
+["Sécurité informatique","الأمن المعلوماتي","Protection","حماية",
+"La sécurité informatique protège les données et systèmes.",
+"الأمن المعلوماتي يحمي البيانات والأنظمة."],
+
+["Mot de passe","كلمة المرور","Protection","حماية",
+"Le mot de passe sécurise les comptes.",
+"كلمة المرور تحمي الحسابات."],
+
+["Données","المعطيات","Informations","معلومات",
+"Les données sont utilisées par les systèmes informatiques.",
+"المعطيات تُستعمل داخل الأنظمة المعلوماتية."],
+
+["Stockage","التخزين","Conservation","حفظ",
+"Le stockage permet de conserver les données.",
+"التخزين يُستعمل لحفظ المعطيات."],
+
+["Programmation","البرمجة","Instructions","أوامر",
+"La programmation consiste à écrire des instructions.",
+"البرمجة هي كتابة أوامر للحاسوب."],
+
+["Algorithme","الخوارزمية","Étapes","خطوات",
+"Un algorithme est une suite d’étapes logiques.",
+"الخوارزمية هي مجموعة خطوات منطقية."],
+
+["Réseau","الشبكة","Connexion","ربط",
+"Le réseau relie plusieurs ordinateurs.",
+"الشبكة تربط عدة حواسيب."],
+
+["Utilisation responsable","الاستعمال المسؤول","Éthique","أخلاقيات",
+"L’utilisation responsable respecte les règles.",
+"الاستعمال المسؤول يحترم القوانين."]
+];
+
+function render(){
+  cards.innerHTML="";
+  data.forEach((d,i)=>{
+    cards.innerHTML+=`
+    <div class="card">
+      <img src="https://source.unsplash.com/400x300/?computer,technology,${i}">
+      <div class="card-content">
+        <h3>${ar?d[1]:d[0]}</h3>
+        <p>${ar?d[3]:d[2]}</p>
+        <button onclick="openPage(${i})">${ar?"اقرأ المزيد":"Lire plus"}</button>
+      </div>
+    </div>`;
+  });
+}
+render();
+
+function openPage(i){
+  modal.classList.add("active");
+  title.textContent=ar?data[i][1]:data[i][0];
+  image.src=`https://source.unsplash.com/800x500/?computer,technology,${i}`;
+  longText.textContent=ar?data[i][5]:data[i][4];
+}
+function closePage(){
+  modal.classList.remove("active");
+}
 </script>
 
 </body>
 </html>
- 
