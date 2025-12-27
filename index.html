@@ -1,84 +1,268 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="fr" dir="ltr">
 <head>
-  <meta charset="UTF-8">
-  <title></title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informatique – Site éducatif</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --bg:#0b1020;
+  --card:#ffffff18;
+  --text:#ffffff;
+  --main:#38bdf8;
+}
+body.light{
+  --bg:#f1f5f9;
+  --card:#ffffff;
+  --text:#0b1020;
+}
+*{box-sizing:border-box;font-family:Segoe UI,Tahoma;}
+body{
+  margin:0;
+  background:radial-gradient(circle at top,var(--bg),#020617);
+  color:var(--text);
+  transition:.4s;
+}
+header{
+  text-align:center;
+  padding:40px 20px;
+}
+.controls{
+  position:fixed;
+  top:15px;
+  right:15px;
+  display:flex;
+  gap:10px;
+}
+.controls button{
+  border:none;
+  padding:10px 14px;
+  border-radius:20px;
+  cursor:pointer;
+}
+.container{
+  padding:30px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+}
+.card{
+  background:var(--card);
+  backdrop-filter:blur(15px);
+  border-radius:25px;
+  overflow:hidden;
+  box-shadow:0 20px 40px #00000080;
+  animation:float 6s ease-in-out infinite;
+}
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+  100%{transform:translateY(0);}
+}
+.card img{
+  width:100%;
+  height:150px;
+  object-fit:cover;
+}
+.card-content{
+  padding:18px;
+  text-align:center;
+}
+.card-content h3{color:var(--main);}
+.card-content p{font-size:14px;}
+.card-content button{
+  margin-top:10px;
+  border:none;
+  padding:8px 16px;
+  border-radius:20px;
+  background:var(--main);
+  cursor:pointer;
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:#000000c0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+.modal.active{display:flex;}
+.page{
+  background:var(--bg);
+  max-width:900px;
+  width:100%;
+  border-radius:30px;
+  padding:30px;
+  max-height:90vh;
+  overflow:auto;
+}
+.page img{
+  width:100%;
+  border-radius:20px;
+  margin-bottom:15px;
+}
+.close{
+  cursor:pointer;
+  font-size:22px;
+}
+</style>
 </head>
+
 <body>
 
-<div class="bg"></div>
+<div class="controls">
+  <button onclick="toggleLang()">AR / FR</button>
+  <button onclick="toggleTheme()">🌙</button>
+</div>
 
 <header>
-  <h1>موقع تعلم المعلوميات</h1>
-  <p>أدوات ومفاهيم أساسية بطريقة ثلاثية الأبعاد</p>
+  <h1 data-fr="Informatique" data-ar="المعلوميات">Informatique</h1>
+  <p data-fr="20 notions essentielles en informatique"
+     data-ar="20 مفهوم أساسي في مادة المعلوميات">
+     20 notions essentielles en informatique
+  </p>
 </header>
 
-<section class="cards">
+<div class="container" id="cards"></div>
 
-  <a href="computer.html" class="card" data-color="#0a3d62">
-    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHhzNGp1azNtYzF6MGsybXA0NTEyenp4NjE1aGh5ZXFkOWM1bnB6OCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/QpVUMRUJGokfqXyfa1/giphy.gif">
-    <h3>الحاسوب</h3>
-    <p>معالجة وتخزين المعلومات</p>
-  </a>
+<div class="modal" id="modal">
+  <div class="page">
+    <span class="close" onclick="closePage()">✖</span>
+    <h2 id="title"></h2>
+    <img id="image">
+    <p id="longText"></p>
+  </div>
+</div>
 
-  <a href="keyboard.html" class="card" data-color="#6D214F">
-    <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dTlkeHJ5NDl3eXVzbWJ3ZTJwcXk0am9meTB2cGU0YWRqeWU3MGd5aCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/xUPGcgbVUBLXUkXsoo/giphy.gif">
-    <h3>clavier</h3>
-    <p>إدخال النصوص</p>
-  </a>
+<script>
+let ar=false;
+function toggleLang(){
+  ar=!ar;
+  document.documentElement.lang=ar?"ar":"fr";
+  document.documentElement.dir=ar?"rtl":"ltr";
+  document.querySelectorAll("[data-fr]").forEach(e=>{
+    e.textContent=ar?e.dataset.ar:e.dataset.fr;
+  });
+  render();
+}
+function toggleTheme(){
+  document.body.classList.toggle("light");
+}
 
-  <a href="mouse.html" class="card" data-color="#1B1464">
-    <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3YXZkOWViYzdxcjk5eWtuajFpMWtuc3ZkejFkdnhlNm9zZ3ZiMXprZCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/XICh9GvSm4QvKuhWYU/giphy.gif">
-    <h3>الفأرة</h3>
-    <p>التحكم في المؤشر</p>
-  </a>
+const data=[
+["Ordinateur","الحاسوب","Machine électronique","آلة إلكترونية",
+"L’ordinateur est une machine électronique capable de traiter, stocker et afficher des informations. Il est utilisé dans plusieurs domaines comme l’éducation, le travail et la communication.",
+"الحاسوب آلة إلكترونية تقوم بمعالجة وتخزين وعرض المعلومات، ويُستعمل في مجالات متعددة كالتعلم والعمل والتواصل."],
 
-  <a href="screen.html" class="card" data-color="#2C2C54">
-    <img src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif">
-    <h3>الشاشة</h3>
-    <p>عرض المعلومات</p>
-  </a>
+["Clavier","لوحة المفاتيح","Périphérique d’entrée","أداة إدخال",
+"Le clavier permet de saisir des lettres, des chiffres et des symboles pour communiquer avec l’ordinateur.",
+"لوحة المفاتيح تُستعمل لإدخال الحروف والأرقام والرموز للتواصل مع الحاسوب."],
 
-  <a href="printer.html" class="card" data-color="#40407a">
-    <img src="https://media.giphy.com/media/3o7TKMt1VVNkHV2PaE/giphy.gif">
-    <h3>الطابعة</h3>
-    <p>طباعة الوثائق</p>
-  </a>
+["Souris","الفأرة","Cliquer et pointer","النقر والتأشير",
+"La souris permet de déplacer le curseur et sélectionner des éléments à l’écran.",
+"الفأرة تُستعمل لتحريك المؤشر واختيار العناصر."],
 
-  <a href="software.html" class="card" data-color="#218c74">
-    <img src="https://media.giphy.com/media/xUPGcguWZHRC2HyBRS/giphy.gif">
-    <h3>البرمجيات</h3>
-    <p>برامج الحاسوب</p>
-  </a>
+["Écran","الشاشة","Afficher les données","عرض المعطيات",
+"L’écran affiche les informations traitées par l’ordinateur sous forme visuelle.",
+"الشاشة تعرض المعلومات التي يعالجها الحاسوب بشكل مرئي."],
 
-  <a href="hardware.html" class="card" data-color="#cc8e35">
-    <img src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif">
-    <h3>الهاردوير</h3>
-    <p>المكونات المادية</p>
-  </a>
+["Unité centrale","الوحدة المركزية","Cœur de l’ordinateur","قلب الحاسوب",
+"L’unité centrale contient les composants essentiels comme le processeur.",
+"الوحدة المركزية تحتوي على أهم مكونات الحاسوب."],
 
-  <a href="internet.html" class="card" data-color="#227093">
-    <img src="https://media.giphy.com/media/3o7aD4t2vRX9kF1QBi/giphy.gif">
-    <h3>الإنترنت</h3>
-    <p>شبكة عالمية</p>
-  </a>
+["Fichier","الملف","Données stockées","معطيات مخزنة",
+"Un fichier est un ensemble de données enregistrées dans l’ordinateur.",
+"الملف هو مجموعة من المعطيات المخزنة في الحاسوب."],
 
-  <a href="folder.html" class="card" data-color="#b33939">
-    <img src="https://media.giphy.com/media/3o7TKx5wG8G1sGm0DK/giphy.gif">
-    <h3>الملفات</h3>
-    <p>تنظيم المعلومات</p> 
-  </a>
+["Dossier","المجلد","Organisation","تنظيم",
+"Le dossier sert à organiser et classer les fichiers.",
+"المجلد يُستعمل لتنظيم الملفات."],
 
-  <a href="os.html" class="card" data-color="#596275">
-    <img src="https://media.giphy.com/media/l3q2K5jinAlChoCLS/giphy.gif">
-    <h3>نظام التشغيل</h3>
-    <p>تشغيل الحاسوب</p>
-  </a>
+["Système d’exploitation","نظام التشغيل","Gestion du système","إدارة النظام",
+"Le système d’exploitation gère le fonctionnement de l’ordinateur.",
+"نظام التشغيل يدير عمل الحاسوب."],
 
+["Logiciel","البرنامج","Application","تطبيق",
+"Un logiciel permet d’effectuer une tâche spécifique.",
+"البرنامج يساعد على إنجاز مهمة معينة."],
 
-</section>
+["Internet","الأنترنت","Réseau mondial","شبكة عالمية",
+"Internet permet l’échange rapide d’informations dans le monde.",
+"الأنترنت يتيح تبادل المعلومات بسرعة على الصعيد العالمي."],
 
-<script src="script.js"></script>
+["Navigateur","المتصفح","Accès web","ولوج الأنترنت",
+"Le navigateur permet de consulter les sites web.",
+"المتصفح يُستعمل لتصفح المواقع الإلكترونية."],
+
+["Email","البريد الإلكتروني","Communication","التواصل",
+"L’email permet d’envoyer et recevoir des messages.",
+"البريد الإلكتروني يُستعمل لإرسال واستقبال الرسائل."],
+
+["Sécurité informatique","الأمن المعلوماتي","Protection","حماية",
+"La sécurité informatique protège les données et systèmes.",
+"الأمن المعلوماتي يحمي البيانات والأنظمة."],
+
+["Mot de passe","كلمة المرور","Protection","حماية",
+"Le mot de passe sécurise les comptes.",
+"كلمة المرور تحمي الحسابات."],
+
+["Données","المعطيات","Informations","معلومات",
+"Les données sont utilisées par les systèmes informatiques.",
+"المعطيات تُستعمل داخل الأنظمة المعلوماتية."],
+
+["Stockage","التخزين","Conservation","حفظ",
+"Le stockage permet de conserver les données.",
+"التخزين يُستعمل لحفظ المعطيات."],
+
+["Programmation","البرمجة","Instructions","أوامر",
+"La programmation consiste à écrire des instructions.",
+"البرمجة هي كتابة أوامر للحاسوب."],
+
+["Algorithme","الخوارزمية","Étapes","خطوات",
+"Un algorithme est une suite d’étapes logiques.",
+"الخوارزمية هي مجموعة خطوات منطقية."],
+
+["Réseau","الشبكة","Connexion","ربط",
+"Le réseau relie plusieurs ordinateurs.",
+"الشبكة تربط عدة حواسيب."],
+
+["Utilisation responsable","الاستعمال المسؤول","Éthique","أخلاقيات",
+"L’utilisation responsable respecte les règles.",
+"الاستعمال المسؤول يحترم القوانين."]
+];
+
+function render(){
+  cards.innerHTML="";
+  data.forEach((d,i)=>{
+    cards.innerHTML+=`
+    <div class="card">
+      <img src="https://source.unsplash.com/400x300/?computer,technology,${i}">
+      <div class="card-content">
+        <h3>${ar?d[1]:d[0]}</h3>
+        <p>${ar?d[3]:d[2]}</p>
+        <button onclick="openPage(${i})">${ar?"اقرأ المزيد":"Lire plus"}</button>
+      </div>
+    </div>`;
+  });
+}
+render();
+
+function openPage(i){
+  modal.classList.add("active");
+  title.textContent=ar?data[i][1]:data[i][0];
+  image.src=`https://source.unsplash.com/800x500/?computer,technology,${i}`;
+  longText.textContent=ar?data[i][5]:data[i][4];
+}
+function closePage(){
+  modal.classList.remove("active");
+}
+</script>
+
 </body>
 </html>
