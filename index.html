@@ -1,11 +1,9 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fr" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Informatique – Site éducatif</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
@@ -155,86 +153,109 @@ function toggleTheme(){
   document.body.classList.toggle("light");
 }
 
+const images=[
+ "https://l.top4top.io/p_36490sqhq1.png",
+ "https://a.top4top.io/p_3649gmo3o2.png",
+ "https://b.top4top.io/p_3649l9imi3.png",
+ "https://c.top4top.io/p_36496wlox4.png",
+ "https://d.top4top.io/p_3649a06do5.png",
+ "https://e.top4top.io/p_36494zxh16.png",
+ "https://e.top4top.io/p_36494zxh16.png",
+ "https://f.top4top.io/p_36496nkes7.png",
+ "https://g.top4top.io/p_36496unnt8.png",
+ "https://h.top4top.io/p_3649mf7ad9.png",
+ "https://i.top4top.io/p_3649d4npf10.png",
+ "https://c.top4top.io/p_36495hxuu1.png",
+ "https://d.top4top.io/p_3649gbdaa2.png",
+ "https://e.top4top.io/p_36493tvb53.png",
+ "https://f.top4top.io/p_3649xi1y04.png",
+ "https://g.top4top.io/p_3649uxfmo5.png",
+ "https://h.top4top.io/p_3649bg6ux6.png",
+ "https://i.top4top.io/p_3649yc3l77.png",
+ "https://j.top4top.io/p_3649mny018.png",
+ "https://k.top4top.io/p_3649kug9l9.png"
+];
+
 const data=[
 ["Ordinateur","الحاسوب","Machine électronique","آلة إلكترونية",
-"L’ordinateur est une machine électronique capable de traiter, stocker et afficher des informations. Il est utilisé dans plusieurs domaines comme l’éducation, le travail et la communication.",
-"الحاسوب آلة إلكترونية تقوم بمعالجة وتخزين وعرض المعلومات، ويُستعمل في مجالات متعددة كالتعلم والعمل والتواصل."],
+"L’ordinateur est une machine électronique capable de traiter, stocker et afficher des informations.",
+"الحاسوب آلة إلكترونية تقوم بمعالجة وتخزين وعرض المعلومات."],
 
 ["Clavier","لوحة المفاتيح","Périphérique d’entrée","أداة إدخال",
-"Le clavier permet de saisir des lettres, des chiffres et des symboles pour communiquer avec l’ordinateur.",
-"لوحة المفاتيح تُستعمل لإدخال الحروف والأرقام والرموز للتواصل مع الحاسوب."],
+"Le clavier permet de saisir des lettres, des chiffres et des symboles.",
+"لوحة المفاتيح تُستعمل لإدخال الحروف والأرقام والرموز."],
 
-["Souris","الفأرة","Cliquer et pointer","النقر والتأشير",
+["Souris","الفأرة","Périphérique de pointage","أداة تأشير",
 "La souris permet de déplacer le curseur et sélectionner des éléments à l’écran.",
-"الفأرة تُستعمل لتحريك المؤشر واختيار العناصر."],
+"الفأرة تُستعمل لتحريك المؤشر واختيار العناصر على الشاشة."],
 
-["Écran","الشاشة","Afficher les données","عرض المعطيات",
-"L’écran affiche les informations traitées par l’ordinateur sous forme visuelle.",
-"الشاشة تعرض المعلومات التي يعالجها الحاسوب بشكل مرئي."],
+["Écran","الشاشة","Affichage des données","عرض المعطيات",
+"L’écran affiche les informations de l’ordinateur visuellement.",
+"الشاشة تُستعمل لعرض المعلومات بصرياً."],
 
-["Unité centrale","الوحدة المركزية","Cœur de l’ordinateur","قلب الحاسوب",
-"L’unité centrale contient les composants essentiels comme le processeur.",
-"الوحدة المركزية تحتوي على أهم مكونات الحاسوب."],
+["Unité centrale","الوحدة المركزية","Cœur du PC","قلب الحاسوب",
+"L’unité centrale contient les composants essentiels du système.",
+"الوحدة المركزية تضم مكونات الحاسوب الأساسية."],
 
-["Fichier","الملف","Données stockées","معطيات مخزنة",
-"Un fichier est un ensemble de données enregistrées dans l’ordinateur.",
-"الملف هو مجموعة من المعطيات المخزنة في الحاسوب."],
+["Fichier","الملف","Ensemble de données","مجموعة معطيات",
+"Un fichier est un ensemble de données stockées.",
+"الملف هو مجموعة من المعطيات مخزنة."],
 
-["Dossier","المجلد","Organisation","تنظيم",
-"Le dossier sert à organiser et classer les fichiers.",
-"المجلد يُستعمل لتنظيم الملفات."],
+["Dossier","المجلد","Organisation des fichiers","تنظيم الملفات",
+"Le dossier permet d’organiser différents fichiers.",
+"المجلد يُستعمل لتنظيم مختلف الملفات."],
 
-["Système d’exploitation","نظام التشغيل","Gestion du système","إدارة النظام",
-"Le système d’exploitation gère le fonctionnement de l’ordinateur.",
-"نظام التشغيل يدير عمل الحاسوب."],
+["Système d’exploitation","نظام التشغيل","Gestion du PC","إدارة الحاسوب",
+"Le système d’exploitation gère les ressources du PC.",
+"نظام التشغيل يدير موارد الحاسوب."],
 
 ["Logiciel","البرنامج","Application","تطبيق",
-"Un logiciel permet d’effectuer une tâche spécifique.",
-"البرنامج يساعد على إنجاز مهمة معينة."],
+"Un logiciel est un programme qui exécute des tâches.",
+"البرنامج هو مجموعة أوامر تنفذ وظائف."],
 
 ["Internet","الأنترنت","Réseau mondial","شبكة عالمية",
-"Internet permet l’échange rapide d’informations dans le monde.",
-"الأنترنت يتيح تبادل المعلومات بسرعة على الصعيد العالمي."],
+"Internet est une structure mondiale d’échange de données.",
+"الأنترنت هي بنية عالمية لتبادل المعطيات."],
 
-["Navigateur","المتصفح","Accès web","ولوج الأنترنت",
-"Le navigateur permet de consulter les sites web.",
-"المتصفح يُستعمل لتصفح المواقع الإلكترونية."],
+["Navigateur","المتصفح","Accès web","ولوج الويب",
+"Le navigateur sert à accéder aux pages web.",
+"المتصفح يُستعمل للدخول إلى الصفحات الإلكترونية."],
 
 ["Email","البريد الإلكتروني","Communication","التواصل",
 "L’email permet d’envoyer et recevoir des messages.",
 "البريد الإلكتروني يُستعمل لإرسال واستقبال الرسائل."],
 
 ["Sécurité informatique","الأمن المعلوماتي","Protection","حماية",
-"La sécurité informatique protège les données et systèmes.",
-"الأمن المعلوماتي يحمي البيانات والأنظمة."],
+"La sécurité protège les systèmes et données.",
+"الأمن المعلوماتي يحمي الأنظمة والبيانات."],
 
-["Mot de passe","كلمة المرور","Protection","حماية",
-"Le mot de passe sécurise les comptes.",
-"كلمة المرور تحمي الحسابات."],
+["Mot de passe","كلمة المرور","Sécurité","أمن",
+"Le mot de passe sécurise l’accès aux comptes.",
+"كلمة المرور تحمي الدخول إلى الحسابات."],
 
 ["Données","المعطيات","Informations","معلومات",
-"Les données sont utilisées par les systèmes informatiques.",
-"المعطيات تُستعمل داخل الأنظمة المعلوماتية."],
+"Les données sont des informations numériques.",
+"المعطيات هي معلومات رقمية."],
 
 ["Stockage","التخزين","Conservation","حفظ",
-"Le stockage permet de conserver les données.",
-"التخزين يُستعمل لحفظ المعطيات."],
+"Le stockage garde les données sur des disques.",
+"التخزين يخزن المعطيات في وسائط مختلفة."],
 
-["Programmation","البرمجة","Instructions","أوامر",
-"La programmation consiste à écrire des instructions.",
-"البرمجة هي كتابة أوامر للحاسوب."],
+["Programmation","البرمجة","Code","الترميز",
+"La programmation signifie écrire du code.",
+"البرمجة تعني كتابة التعليمات."],
 
-["Algorithme","الخوارزمية","Étapes","خطوات",
-"Un algorithme est une suite d’étapes logiques.",
-"الخوارزمية هي مجموعة خطوات منطقية."],
+["Algorithme","الخوارزمية","Étapes logiques","خطوات منطقية",
+"Un algorithme est une série dʼétapes logiques pour résoudre un problème.",
+"الخوارزمية هي سلسلة خطوات لحل المشكلة."],
 
 ["Réseau","الشبكة","Connexion","ربط",
-"Le réseau relie plusieurs ordinateurs.",
-"الشبكة تربط عدة حواسيب."],
+"Un réseau connecte plusieurs ordinateurs.",
+"الشبكة تربط عدة أجهزة."],
 
-["Utilisation responsable","الاستعمال المسؤول","Éthique","أخلاقيات",
-"L’utilisation responsable respecte les règles.",
-"الاستعمال المسؤول يحترم القوانين."]
+["Utilisation responsable","الاستعمال المسؤول","Éthique","أخلاق",
+"L’utilisation responsable respecte règles et normes.",
+"الاستعمال المسؤول يحترم القوانين."],
 ];
 
 function render(){
@@ -242,7 +263,7 @@ function render(){
   data.forEach((d,i)=>{
     cards.innerHTML+=`
     <div class="card">
-      <img src="https://source.unsplash.com/400x300/?computer,technology,${i}">
+      <img src="${images[i]}">
       <div class="card-content">
         <h3>${ar?d[1]:d[0]}</h3>
         <p>${ar?d[3]:d[2]}</p>
@@ -256,7 +277,7 @@ render();
 function openPage(i){
   modal.classList.add("active");
   title.textContent=ar?data[i][1]:data[i][0];
-  image.src=`https://source.unsplash.com/800x500/?computer,technology,${i}`;
+  image.src=images[i];
   longText.textContent=ar?data[i][5]:data[i][4];
 }
 function closePage(){
